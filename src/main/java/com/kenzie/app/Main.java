@@ -2,6 +2,7 @@ package com.kenzie.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main{
@@ -13,7 +14,15 @@ public class Main{
      */
     public static boolean addPassIfUnique(HashMap<String, EntryPass> entryPassHashMap,EntryPass entryPass){
         //fill in method
-        return false;
+        String nameId;
+        if(entryPassHashMap.containsValue(entryPass)){
+            return false;
+        }else{
+            nameId = entryPass.getName().concat(entryPass.getId());
+            entryPassHashMap.put(nameId, entryPass);
+        }
+
+        return true;
     }
 
 
@@ -23,8 +32,14 @@ public class Main{
      */
     public static ArrayList<String> getVIPList(HashMap<String, EntryPass> hashMap){
         //fill in method
-
-        return null;
+        ArrayList<String> vipList = new ArrayList<>();
+        for(Map.Entry<String, EntryPass> entry : hashMap.entrySet()){
+            //String check = entry.getValue().getAccessLevel();
+            if(entry.getValue().getAccessLevel().equalsIgnoreCase("vip")){
+                vipList.add(entry.getValue().getName());
+            }
+        }
+        return vipList;
     }
 
     public static void main(String[] args) {
@@ -32,12 +47,35 @@ public class Main{
         ArrayList<String> blockList = new ArrayList<>();
 
         //define local variables as needed
-
+        String name;
+        String id;
+        String accessLevel;
+        Scanner scanner = new Scanner(System.in);
 
         // write your code here
+        while(true) {
+            System.out.println("Please enter name.");
+            name = scanner.nextLine();
+            System.out.println("Please enter id.");
+            id = scanner.nextLine();
+            System.out.println("Please enter access level.");
+            accessLevel = scanner.nextLine();
 
+            EntryPass entryPass = new EntryPass(name, id, accessLevel);
 
+            if(addPassIfUnique(entryPassesByName, entryPass)){
+                System.out.println("Added to EntryList");
+            }else{
+                System.out.println("Blocked");
+                blockList.add(entryPass.getName());
+            }
 
+            System.out.println("Continue? Y/N");
+            String response = scanner.nextLine();
+            if (response.equalsIgnoreCase("N")){
+                break;
+            }
+        }
 
         //Use this print statement at the end of the program. Do not modify!
         System.out.println("Entry Pass List:");
